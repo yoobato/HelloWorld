@@ -1,33 +1,6 @@
 import React, { Component } from 'react';
 import Modal from './components/Modal';
-
-const todoItems = [
-    {
-        "id": 1,
-        "description": "Make Dockerfile for Django and React",
-        "completed": false
-    },
-    {
-        "id": 2,
-        "description": "Have a cup of tea with my teammates",
-        "completed": false
-    },
-    {
-        "id": 3,
-        "description": "This is a Todo with long description which includes more than 80 characters. Let's Todo truncate with ellipsis works well. The Todo description must only contains 77 characters from start and '...' added at the end. Because I added this logic on __str__() method.",
-        "completed": false
-    },
-    {
-        "id": 4,
-        "description": "Add Django REST framework (DRF)!",
-        "completed": false
-    },
-    {
-        "id": 5,
-        "description": "New Todo from Django REST framework (revised)",
-        "completed": false
-    }
-];
+import axios from 'axios';
 
 class App extends Component {
     constructor(props) {
@@ -39,8 +12,18 @@ class App extends Component {
                 description: "",
                 completed: false
             },
-            todoList: todoItems
+            todoList: []
         };
+    };
+    componentDidMount() {
+        this.refreshList();
+    }
+
+    refreshList = () => {
+        axios
+            .get('http://localhost:8000/api/todos/')
+            .then(res => this.setState({ todoList: res.data }))
+            .catch(err => console.log(err));
     };
 
     toggle = () => {
@@ -48,10 +31,21 @@ class App extends Component {
     };
     handleSubmit = item => {
         this.toggle();
-        alert("Save: " + JSON.stringify(item));
+        if (item.id) {
+            // TODO: 이거 오류...
+            axios
+                .put(`http://localhost:8000/api/todos/${item.id}`, item)
+                .then(res => this.refreshList());
+        } else {
+            axios
+                .post('http://localhost:8000/api/toods/', item)
+                .then(res => this.refreshList());
+        }
     };
     handleDelete = item => {
-        alert("Delete: " + JSON.stringify(item));
+        axios
+            .delete(`http://localhost:8000/api/todos/${item.id}`)
+            .then(res => this.refreshList());
     };
     createItem = () => {
         const item = { description: "", completed: false };
@@ -89,17 +83,14 @@ class App extends Component {
     renderItems = () => {
         const { viewCompleted } = this.state;
         const newItems = this.state.todoList.filter(
-            item => item.completed == viewCompleted
+            item => item.completed === viewCompleted
         );
         return newItems.map(item => (
             <li
                 key={item.id}
                 className="list-group-item d-flex justify-content-between align-items-center"
             >
-                <span
-                    className={`todo-summary mr-2 ${this.state.viewCompleted ? "completed-todo" : ""}`}
-                    title={item.description}
-                >
+                <span className={`todo-summary mr-2 ${this.state.viewCompleted ? "completed-todo" : ""}`}>
                     {item.description.length > 57 ? item.description.substr(0, 57) + '...' : item.description}
                 </span>
                 <span>
@@ -107,13 +98,14 @@ class App extends Component {
                         onClick={() => this.editItem(item)}
                         className="btn btn-secondary mr-2"
                     >
-                        Edit
+                        {" "}
+                        Edit{" "}
                     </button>
                     <button
                         onClick={() => this.handleDelete(item)}
                         className="btn btn-danger"
                     >
-                        Delete
+                        Delete{" "}
                     </button>
                 </span>
             </li>

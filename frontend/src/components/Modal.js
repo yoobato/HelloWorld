@@ -22,7 +22,7 @@ export default class CustomModal extends Component {
     handleChange = e => {
         let { name, value } = e.target;
 
-        if (e.target.type == "checkbox") {
+        if (e.target.type === "checkbox") {
             value = e.target.checked;
         }
 
@@ -34,18 +34,18 @@ export default class CustomModal extends Component {
         const { toggle, onSave } = this.props;
 
         return (
-            <Modal isOpen={true} toggle={true}>
+            <Modal isOpen={true} toggle={toggle}>
                 <ModalHeader toggle={toggle}> Todo Item </ModalHeader>
                 <ModalBody>
                     <Form>
                         <FormGroup>
                             <Label for="description">Description</Label>
                             <Input
-                                type="text"
+                                type="textarea"
+                                rows="10"
                                 name="description"
                                 value={this.state.activeItem.description}
                                 onChange={this.handleChange}
-                                placeholder="Enter Todo description"
                             />
                         </FormGroup>
                         <FormGroup check>
