@@ -34,17 +34,17 @@ class App extends Component {
         if (item.id) {
             // TODO: 이거 오류...
             axios
-                .put(`http://localhost:8000/api/todos/${item.id}`, item)
+                .put(`http://localhost:8000/api/todos/${item.id}/`, item)
                 .then(res => this.refreshList());
         } else {
             axios
-                .post('http://localhost:8000/api/toods/', item)
+                .post('http://localhost:8000/api/todos/', item)
                 .then(res => this.refreshList());
         }
     };
     handleDelete = item => {
         axios
-            .delete(`http://localhost:8000/api/todos/${item.id}`)
+            .delete(`http://localhost:8000/api/todos/${item.id}/`)
             .then(res => this.refreshList());
     };
     createItem = () => {
