@@ -32,7 +32,6 @@ class App extends Component {
     handleSubmit = item => {
         this.toggle();
         if (item.id) {
-            // TODO: 이거 오류...
             axios
                 .put(`http://localhost:8000/api/todos/${item.id}/`, item)
                 .then(res => this.refreshList());
