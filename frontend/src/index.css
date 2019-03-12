@@ -9,21 +9,9 @@ body {
   background-color: #282c34;
 }
 
-.todo-summary {
-  cursor: pointer;
-}
-.completed-todo {
-  text-decoration: line-through;
-}
-
-.tab-list > span {
-  padding: 5px 8px;
-  border: 1px solid #282c34;
-  border-radius: 10px;
-  margin-right: 5px;
-  cursor: pointer;
-}
-.tab-list > span.active {
-  background-color: #282c34;
+.chart-title {
+  margin-top: 1em;
+  margin-bottom: 2em;
   color: #ffffff;
+  text-align: center;
 }
