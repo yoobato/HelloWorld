@@ -6,46 +6,31 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            memberList: [],
-            chartData: [['Name', 'Manager ID']]
+            chartData: [['Name', 'Manager ID']],
         };
     };
 
     componentDidMount() {
-        this.refreshList();
+        this.fetchMemberList();
     }
 
-    refreshList = () => {
-        axios.get('http://localhost:8000/api/members/')
-            .then(res => this.setState({ memberList: res.data }))
+    fetchMemberList = () => {
+        axios.get('http://localhost:8000/api/organization/members/')
+            .then(res => this.makeChartData(res.data))
             .catch(err => console.log(err));
-        this.convertMemberListToChartData()
     };
-    convertMemberListToChartData = () => {
-        // TODO: MemberList -> ChartData 로 변환
-
-        this.setState({
-            chartData: [
-                        ['Name', 'Manager ID'],
-                        [
-                            {
-                                v: 'Mike',
-                                f: 'Mike<div style="color:red; font-style:italic">President</div>',
-                            },
-                            ''
-                        ],
-                        [
-                            {
-                                v: 'Jim',
-                                f: 'Jim<div style="color:red; font-style:italic">Vice President</div>',
-                            },
-                            'Mike',
-                        ],
-                        ['Alice', 'Mike'],
-                        ['Bob', 'Jim'],
-                        ['Carol', 'Bob'],
-                    ]
+    makeChartData = (memberList) => {
+        let chartData = [['Name', 'Manager ID']];
+        memberList.forEach((member) => {
+            chartData.push([
+                {
+                    v: member.id.toString(),
+                    f: member.name + '<div style="color: blue; font-style: italic">' + member.job_title + '</div>',
+                },
+                (member.manager_id ? member.manager_id.toString() : ''),
+            ]);
         });
+        this.setState({ chartData: chartData });
     };
 
     render() {
@@ -55,13 +40,11 @@ class App extends Component {
 
                 <Chart
                     width={'100%'}
-                    height={350}
+                    height={600}
                     chartType="OrgChart"
-                    loader={<div>조직도를 로딩하는 중입니다...</div>}
+                    loader={<div style={{ "text-align": "center", "color": "white" }}>조직도를 로딩하는 중입니다...</div>}
                     data={this.state.chartData}
-                    options={{
-                        allowHtml: true,
-                    }}
+                    options={{ allowHtml: true }}
                     rootProps={{ 'data-testid': '1' }}
                 />
             </main>
