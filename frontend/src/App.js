@@ -44,7 +44,10 @@ class App extends Component {
                     chartType="OrgChart"
                     loader={<div style={{ "text-align": "center", "color": "white" }}>조직도를 로딩하는 중입니다...</div>}
                     data={this.state.chartData}
-                    options={{ allowHtml: true }}
+                    options={{
+                        allowCollapse: true,
+                        allowHtml: true,
+                    }}
                     rootProps={{ 'data-testid': '1' }}
                 />
             </main>
