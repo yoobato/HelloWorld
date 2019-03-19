@@ -1,4 +1,4 @@
-# HelloWorld
+# django-react-orgchart
 Simple organization chart on Django + React stack.
 
 ## TODO
